@@ -10,7 +10,7 @@ module task4(input logic CLOCK_50, input logic [3:0] KEY, input logic [9:0] SW,
 	 logic wren, en_crack, rdy_crack, key_valid;
 	 logic [4:0] char0, char1, char2, char3, char4, char5;
 	 logic done_crack;
-	 logic ct_wrdata;
+	 logic [7:0] ct_wrdata;
 	 
 	 task4_ctrl task4_ctrl_ins(.clk(CLOCK_50), .rst_n(KEY[3]), .rdy_crack, .en_crack, .done_crack);
 	 
@@ -61,3 +61,45 @@ module task4(input logic CLOCK_50, input logic [3:0] KEY, input logic [9:0] SW,
 	 end
 
 endmodule: task4
+
+module task4_ctrl(input logic clk, input logic rst_n, input logic rdy_crack, 
+						output logic en_crack, output logic done_crack);
+	
+	parameter Start = 3'b000;
+	parameter Wait = 3'b001;
+	parameter Start_crack = 3'b010;
+	parameter Wait_crack = 3'b011;
+	parameter Finish = 3'b100;
+	
+	logic [2:0] state, next_state;
+	
+	always_ff @(posedge clk or negedge rst_n) begin
+		if(rst_n == 0) state <= Start;
+		else state <= next_state;
+	end
+	
+	always_comb begin
+		case(state)
+			Start: 			next_state = Wait;				
+			Wait: 			if(rdy_crack) next_state = Start_crack;
+								else next_state = Wait;
+			Start_crack: 	next_state = Wait_crack;
+			Wait_crack: 	if(rdy_crack) next_state = Finish;
+								else next_state = Wait_crack;
+			Finish: 			next_state = Finish;
+			default: 		next_state = 3'bxxx;
+		endcase
+	end
+	
+	always_comb begin
+		case(state)
+			Start: 			begin en_crack = 0; done_crack = 0; end
+			Wait: 			begin en_crack = 0; done_crack = 0; end
+			Start_crack: 	begin en_crack = 1; done_crack = 0; end
+			Wait_crack: 	begin en_crack = 0; done_crack = 0; end
+			Finish: 			begin en_crack = 0; done_crack = 1; end
+			default: 		begin en_crack = 1'bx; done_crack = 1'bx; end
+		endcase
+	end
+	
+endmodule
