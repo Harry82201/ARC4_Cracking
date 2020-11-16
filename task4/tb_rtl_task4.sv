@@ -19,15 +19,15 @@ module tb_rtl_task4();
 	initial begin
       CLOCK_50 = 0;
       forever #1 CLOCK_50 = ~CLOCK_50;
-   end
+   	end
 	
 	
 	initial begin
 		$readmemh("test2.memh", task4_rtl.ct.altsyncram_component.m_default.altsyncram_inst.mem_data);
 		#132000;
 		$readmemh("task4_test1.memh", task4_rtl.ct.altsyncram_component.m_default.altsyncram_inst.mem_data);
-		#15000;
-		$readmemh("task4_test2.memh", task4_rtl.ct.altsyncram_component.m_default.altsyncram_inst.mem_data);
+		//#15000;
+		//$readmemh("task4_test2.memh", task4_rtl.ct.altsyncram_component.m_default.altsyncram_inst.mem_data);
 	end
 	 
 	initial begin
@@ -40,10 +40,10 @@ module tb_rtl_task4();
 		KEY[3] = 0;
 		#10;
 		KEY[3] = 1;
-		#15000;
-		KEY[3] = 0;
-		#10;
-		KEY[3] = 1;
+		//#15000;
+		//KEY[3] = 0;
+		//#10;
+		//KEY[3] = 1;
 	end
 
 endmodule: tb_rtl_task4

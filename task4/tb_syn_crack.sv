@@ -7,14 +7,14 @@ module tb_syn_crack();
 	logic [23:0] key;
 	logic [7:0] ct_addr, ct_rddata;
 	
-	crack crack_rtl(.clk, .rst_n, .en, .rdy, .key, .key_valid, .ct_addr, .ct_rddata);
+	crack crack_syn(.clk, .rst_n, .en, .rdy, .key, .key_valid, .ct_addr, .ct_rddata);
 	
 	initial begin
         clk = 0;
         forever #1 clk = ~clk;
     end
 	 
-	 initial begin
+	initial begin
 		rst_n = 1;
 		#10;
 		rst_n = 0;
@@ -28,9 +28,9 @@ module tb_syn_crack();
 		rst_n = 0;
 		#10;
 		rst_n = 1;
-	 end
+	end
 	 
-	 initial begin
+	initial begin
 		en = 1;
 		ct_rddata = 8'b0;
 		#40;
@@ -59,7 +59,7 @@ module tb_syn_crack();
 		ct_rddata = 8'b1011101;
 		#400;
 		ct_rddata = 8'b10111011;
-	 end
+	end
 
 
 endmodule: tb_syn_crack

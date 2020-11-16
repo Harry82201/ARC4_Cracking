@@ -1,26 +1,3 @@
-`define Start 			5'b00000 
-`define Wait  			5'b00001
-`define Inc_i  		    5'b00010 
-`define Get_si		  	5'b00011 						
-`define Store_si  	    5'b00100 
-`define Cal_j  		    5'b00101	
-`define Get_sj			5'b00110 
-`define Store_sj  	    5'b00111 
-`define Write_i_to_j    5'b01000 
-`define Set_addr_i  	5'b01001	
-`define Write_j_to_i	5'b01010	
-`define Sum_si_sj	 	5'b01011 
-`define Get_padk		5'b01100
-`define Store_padk	    5'b01101 
-`define Get_CT			5'b01110	
-`define Pad_xor_CT	    5'b01111	
-`define Store_PT		5'b10000 
-`define Inc_k			5'b10001 
-`define Check_k 		5'b10010
-`define Finish			5'b10011
-`define Get_msg_len	    5'b10100
-`define Wait_len		5'b10101
-`define Store_len		5'b10110
 
 module prga(input logic clk, input logic rst_n,
             input logic en, output logic rdy,
@@ -40,12 +17,35 @@ module prga(input logic clk, input logic rst_n,
 	logic data_out_sel;
 	
 	logic en_i, en_j, en_pad, en_ct, en_pt;
-	logic	en_cal_j, en_sum;
+	logic en_cal_j, en_sum;
 	logic increment_i, increment_k;
 	
 	logic en_len;
 	logic [7:0] msg_length;
 
+	parameter Start 	  	= 5'b00000;
+	parameter Wait  		= 5'b00001;
+	parameter Inc_i  		= 5'b00010; 
+	parameter Get_si		= 5'b00011; 						
+	parameter Store_si  	= 5'b00100; 
+	parameter Cal_j  		= 5'b00101;	
+	parameter Get_sj		= 5'b00110; 
+	parameter Store_sj  	= 5'b00111; 
+	parameter Write_i_to_j  = 5'b01000; 
+	parameter Set_addr_i  	= 5'b01001;	
+	parameter Write_j_to_i	= 5'b01010;	
+	parameter Sum_si_sj	 	= 5'b01011; 
+	parameter Get_padk		= 5'b01100;
+	parameter Store_padk	= 5'b01101; 
+	parameter Get_CT		= 5'b01110;	
+	parameter Pad_xor_CT	= 5'b01111;	
+	parameter Store_PT		= 5'b10000; 
+	parameter Inc_k			= 5'b10001; 
+	parameter Check_k 		= 5'b10010;
+	parameter Finish		= 5'b10011;
+	parameter Get_msg_len	= 5'b10100;
+	parameter Wait_len		= 5'b10101;
+	parameter Store_len		= 5'b10110;
 	
 	always@ (posedge clk or negedge rst_n) begin
 		if (rst_n == 0) temp_i <= 0;
@@ -121,38 +121,38 @@ module prga(input logic clk, input logic rst_n,
 	
 	
 	always_ff @(posedge clk or negedge rst_n) begin
-		if(rst_n == 0) state <= `Start;
+		if(rst_n == 0) state <= Start;
 		else state <= next_state;
 	end
 	
 	always_comb begin
 		case(state)
-			`Start:			next_state = `Wait;
-			`Wait:			if(en & k_val == 0) next_state = `Get_msg_len;
-							else if(en) next_state = `Inc_i;
-							else next_state = `Wait;
-			`Inc_i:			next_state = `Get_si;
-			`Get_si:		next_state = `Store_si;
-			`Store_si:		next_state = `Cal_j;
-			`Cal_j:			next_state = `Get_sj;
-			`Get_sj:		next_state = `Store_sj;
-			`Store_sj:		next_state = `Write_i_to_j;
-			`Write_i_to_j:	next_state = `Write_j_to_i;
-			`Write_j_to_i:	next_state = `Sum_si_sj;
-			`Sum_si_sj:		next_state = `Get_padk; 
-			`Get_padk:		next_state = `Store_padk;
-			`Store_padk:	next_state = `Get_CT;
-			`Get_CT:		next_state = `Pad_xor_CT;
-			`Pad_xor_CT:	next_state = `Store_PT;
-			`Store_PT:		next_state = `Check_k;
-			`Check_k:		if(k_val == msg_length) next_state = `Wait;
-							else next_state = `Inc_k;
-			`Inc_k:			next_state = `Inc_i;												
-			//`Finish:		next_state = `Wait;
+			Start:			next_state = Wait;
+			Wait:			if(en & k_val == 0) next_state = Get_msg_len;
+							else if(en) next_state = Inc_i;
+							else next_state = Wait;
+			Inc_i:			next_state = Get_si;
+			Get_si:			next_state = Store_si;
+			Store_si:		next_state = Cal_j;
+			Cal_j:			next_state = Get_sj;
+			Get_sj:			next_state = Store_sj;
+			Store_sj:		next_state = Write_i_to_j;
+			Write_i_to_j:	next_state = Write_j_to_i;
+			Write_j_to_i:	next_state = Sum_si_sj;
+			Sum_si_sj:		next_state = Get_padk; 
+			Get_padk:		next_state = Store_padk;
+			Store_padk:		next_state = Get_CT;
+			Get_CT:			next_state = Pad_xor_CT;
+			Pad_xor_CT:		next_state = Store_PT;
+			Store_PT:		next_state = Check_k;
+			Check_k:		if(k_val == msg_length) next_state = Wait;
+							else next_state = Inc_k;
+			Inc_k:			next_state = Inc_i;												
+			//Finish:		next_state = Wait;
 			
-			`Get_msg_len: 	next_state = `Wait_len;
-			`Wait_len: 		next_state = `Store_len;
-			`Store_len: 	next_state = `Inc_k;
+			Get_msg_len: 	next_state = Wait_len;
+			Wait_len: 		next_state = Store_len;
+			Store_len: 		next_state = Inc_k;
 			
 			default: 		next_state = 5'bxxxxx;
 		endcase 
@@ -160,50 +160,50 @@ module prga(input logic clk, input logic rst_n,
 	
 	always_comb begin
 		case(state)
-			`Start:			begin   s_wren = 0; increment_i = 0; addr_sel = 2'b00; en_i = 0; en_j = 0; en_pad = 0; en_ct = 0; pt_wren = 0; 
+			Start:			begin   s_wren = 0; increment_i = 0; addr_sel = 2'b00; en_i = 0; en_j = 0; en_pad = 0; en_ct = 0; pt_wren = 0; 
 									increment_k = 0; rdy = 0; en_cal_j = 0; en_sum = 0; en_pt = 0; en_len = 0; data_out_sel = 0; end						
-			`Wait:			begin   s_wren = 0; increment_i = 0; addr_sel = 2'b00; en_i = 0; en_j = 0; en_pad = 0; en_ct = 0; pt_wren = 0;
+			Wait:			begin   s_wren = 0; increment_i = 0; addr_sel = 2'b00; en_i = 0; en_j = 0; en_pad = 0; en_ct = 0; pt_wren = 0;
 									increment_k = 0; rdy = 1; en_cal_j = 0; en_sum = 0; en_pt = 0; en_len = 0; data_out_sel = 0; end				
-			`Inc_i:			begin   s_wren = 0; increment_i = 1; addr_sel = 2'b00; en_i = 0; en_j = 0; en_pad = 0; en_ct = 0; pt_wren = 0;
+			Inc_i:			begin   s_wren = 0; increment_i = 1; addr_sel = 2'b00; en_i = 0; en_j = 0; en_pad = 0; en_ct = 0; pt_wren = 0;
 									increment_k = 0; rdy = 0; en_cal_j = 0; en_sum = 0;	en_pt = 0; en_len = 0; data_out_sel = 0; end			
-			`Get_si:		begin   s_wren = 0; increment_i = 0; addr_sel = 2'b00; en_i = 0; en_j = 0; en_pad = 0; en_ct = 0; pt_wren = 0;
+			Get_si:			begin   s_wren = 0; increment_i = 0; addr_sel = 2'b00; en_i = 0; en_j = 0; en_pad = 0; en_ct = 0; pt_wren = 0;
 									increment_k = 0; rdy = 0; en_cal_j = 0; en_sum = 0;	en_pt = 0; en_len = 0; data_out_sel = 0; end			
-			`Store_si:		begin   s_wren = 0; increment_i = 0; addr_sel = 2'b00; en_i = 1; en_j = 0; en_pad = 0; en_ct = 0; pt_wren = 0;
+			Store_si:		begin   s_wren = 0; increment_i = 0; addr_sel = 2'b00; en_i = 1; en_j = 0; en_pad = 0; en_ct = 0; pt_wren = 0;
 									increment_k = 0; rdy = 0; en_cal_j = 0; en_sum = 0;	en_pt = 0; en_len = 0; data_out_sel = 0; end			
-			`Cal_j:			begin   s_wren = 0; increment_i = 0; addr_sel = 2'b01; en_i = 0; en_j = 0; en_pad = 0; en_ct = 0; pt_wren = 0;
+			Cal_j:			begin   s_wren = 0; increment_i = 0; addr_sel = 2'b01; en_i = 0; en_j = 0; en_pad = 0; en_ct = 0; pt_wren = 0;
 									increment_k = 0; rdy = 0; en_cal_j = 1; en_sum = 0;	en_pt = 0; en_len = 0; data_out_sel = 0; end			
-			`Get_sj:		begin   s_wren = 0; increment_i = 0; addr_sel = 2'b01; en_i = 0; en_j = 0; en_pad = 0; en_ct = 0; pt_wren = 0;
+			Get_sj:			begin   s_wren = 0; increment_i = 0; addr_sel = 2'b01; en_i = 0; en_j = 0; en_pad = 0; en_ct = 0; pt_wren = 0;
 									increment_k = 0; rdy = 0; en_cal_j = 0; en_sum = 0;	en_pt = 0; en_len = 0; data_out_sel = 0; end
-			`Store_sj:		begin   s_wren = 0; increment_i = 0; addr_sel = 2'b01; en_i = 0; en_j = 1; en_pad = 0; en_ct = 0; pt_wren = 0;
+			Store_sj:		begin   s_wren = 0; increment_i = 0; addr_sel = 2'b01; en_i = 0; en_j = 1; en_pad = 0; en_ct = 0; pt_wren = 0;
 									increment_k = 0; rdy = 0; en_cal_j = 0; en_sum = 0;	en_pt = 0; en_len = 0; data_out_sel = 0; end
-			`Write_i_to_j:	begin   s_wren = 1; increment_i = 0; addr_sel = 2'b01; en_i = 0; en_j = 0; en_pad = 0; en_ct = 0; pt_wren = 0;
+			Write_i_to_j:	begin   s_wren = 1; increment_i = 0; addr_sel = 2'b01; en_i = 0; en_j = 0; en_pad = 0; en_ct = 0; pt_wren = 0;
 									increment_k = 0; rdy = 0; en_cal_j = 0; en_sum = 0;	en_pt = 0; en_len = 0; data_out_sel = 0; end
-			`Write_j_to_i:	begin   s_wren = 1; increment_i = 0; addr_sel = 2'b00; en_i = 0; en_j = 0; en_pad = 0; en_ct = 0; pt_wren = 0;
+			Write_j_to_i:	begin   s_wren = 1; increment_i = 0; addr_sel = 2'b00; en_i = 0; en_j = 0; en_pad = 0; en_ct = 0; pt_wren = 0;
 									increment_k = 0; rdy = 0; en_cal_j = 0; en_sum = 0;	en_pt = 0; en_len = 0; data_out_sel = 1; end
-			`Sum_si_sj:		begin   s_wren = 0; increment_i = 0; addr_sel = 2'b10; en_i = 0; en_j = 0; en_pad = 0; en_ct = 0; pt_wren = 0;
+			Sum_si_sj:		begin   s_wren = 0; increment_i = 0; addr_sel = 2'b10; en_i = 0; en_j = 0; en_pad = 0; en_ct = 0; pt_wren = 0;
 									increment_k = 0; rdy = 0; en_cal_j = 0; en_sum = 1;	en_pt = 0; en_len = 0; data_out_sel = 0; end 
-			`Get_padk:		begin   s_wren = 0; increment_i = 0; addr_sel = 2'b10; en_i = 0; en_j = 0; en_pad = 0; en_ct = 0; pt_wren = 0;
+			Get_padk:		begin   s_wren = 0; increment_i = 0; addr_sel = 2'b10; en_i = 0; en_j = 0; en_pad = 0; en_ct = 0; pt_wren = 0;
 									increment_k = 0; rdy = 0; en_cal_j = 0; en_sum = 0;	en_pt = 0; en_len = 0; data_out_sel = 0; end
-			`Store_padk:	begin   s_wren = 0; increment_i = 0; addr_sel = 2'b10; en_i = 0; en_j = 0; en_pad = 1; en_ct = 0; pt_wren = 0;
+			Store_padk:		begin   s_wren = 0; increment_i = 0; addr_sel = 2'b10; en_i = 0; en_j = 0; en_pad = 1; en_ct = 0; pt_wren = 0;
 									increment_k = 0; rdy = 0; en_cal_j = 0; en_sum = 0;	en_pt = 0; en_len = 0; data_out_sel = 0; end
-			`Get_CT:		begin   s_wren = 0; increment_i = 0; addr_sel = 2'b00; en_i = 0; en_j = 0; en_pad = 0; en_ct = 1; pt_wren = 0;
+			Get_CT:			begin   s_wren = 0; increment_i = 0; addr_sel = 2'b00; en_i = 0; en_j = 0; en_pad = 0; en_ct = 1; pt_wren = 0;
 									increment_k = 0; rdy = 0; en_cal_j = 0; en_sum = 0; en_pt = 0; en_len = 0; data_out_sel = 0; end
-			`Pad_xor_CT:	begin   s_wren = 0; increment_i = 0; addr_sel = 2'b00; en_i = 0; en_j = 0; en_pad = 0; en_ct = 0; pt_wren = 0;
+			Pad_xor_CT:		begin   s_wren = 0; increment_i = 0; addr_sel = 2'b00; en_i = 0; en_j = 0; en_pad = 0; en_ct = 0; pt_wren = 0;
 									increment_k = 0; rdy = 0; en_cal_j = 0; en_sum = 0;	en_pt = 1; en_len = 0; data_out_sel = 0; end
-			`Store_PT:		begin   s_wren = 0; increment_i = 0; addr_sel = 2'b00; en_i = 0; en_j = 0; en_pad = 0; en_ct = 0; pt_wren = 1;
+			Store_PT:		begin   s_wren = 0; increment_i = 0; addr_sel = 2'b00; en_i = 0; en_j = 0; en_pad = 0; en_ct = 0; pt_wren = 1;
 									increment_k = 0; rdy = 0; en_cal_j = 0; en_sum = 0;	en_pt = 0; en_len = 0; data_out_sel = 0; end
-			`Inc_k:			begin   s_wren = 0; increment_i = 0; addr_sel = 2'b00; en_i = 0; en_j = 0; en_pad = 0; en_ct = 0; pt_wren = 0;
+			Inc_k:			begin   s_wren = 0; increment_i = 0; addr_sel = 2'b00; en_i = 0; en_j = 0; en_pad = 0; en_ct = 0; pt_wren = 0;
 									increment_k = 1; rdy = 0; en_cal_j = 0; en_sum = 0;	en_pt = 0; en_len = 0; data_out_sel = 0; end
-			`Check_k:		begin   s_wren = 0; increment_i = 0; addr_sel = 2'b00; en_i = 0; en_j = 0; en_pad = 0; en_ct = 0; pt_wren = 0;
+			Check_k:		begin   s_wren = 0; increment_i = 0; addr_sel = 2'b00; en_i = 0; en_j = 0; en_pad = 0; en_ct = 0; pt_wren = 0;
 									increment_k = 0; rdy = 0; en_cal_j = 0; en_sum = 0;	en_pt = 0; en_len = 0; data_out_sel = 0; end							
-			//`Finish:		begin   s_wren = 0; increment_i = 0; addr_sel = 2'b00; en_i = 0; en_j = 0; en_pad = 0; en_ct = 0; pt_wren = 0;
+			//Finish:		begin   s_wren = 0; increment_i = 0; addr_sel = 2'b00; en_i = 0; en_j = 0; en_pad = 0; en_ct = 0; pt_wren = 0;
 			//						increment_k = 0; rdy = 0; en_cal_j = 0; en_sum = 0;	en_pt = 0; en_len = 0; data_out_sel = 0; end
 			
-			`Get_msg_len:	begin   s_wren = 0; increment_i = 0; addr_sel = 2'b00; en_i = 0; en_j = 0; en_pad = 0; en_ct = 1; pt_wren = 0;
+			Get_msg_len:	begin   s_wren = 0; increment_i = 0; addr_sel = 2'b00; en_i = 0; en_j = 0; en_pad = 0; en_ct = 1; pt_wren = 0;
 									increment_k = 0; rdy = 0; en_cal_j = 0; en_sum = 0;	en_pt = 0; en_len = 1; data_out_sel = 0; end
-			`Wait_len: 		begin   s_wren = 0; increment_i = 0; addr_sel = 2'b00; en_i = 0; en_j = 0; en_pad = 0; en_ct = 0; pt_wren = 0;
+			Wait_len: 		begin   s_wren = 0; increment_i = 0; addr_sel = 2'b00; en_i = 0; en_j = 0; en_pad = 0; en_ct = 0; pt_wren = 0;
 									increment_k = 0; rdy = 0; en_cal_j = 0; en_sum = 0;	en_pt = 1; en_len = 0; data_out_sel = 1; end
-			`Store_len:		begin   s_wren = 0; increment_i = 0; addr_sel = 2'b00; en_i = 0; en_j = 0; en_pad = 0; en_ct = 0; pt_wren = 1;
+			Store_len:		begin   s_wren = 0; increment_i = 0; addr_sel = 2'b00; en_i = 0; en_j = 0; en_pad = 0; en_ct = 0; pt_wren = 1;
 									increment_k = 0; rdy = 0; en_cal_j = 0; en_sum = 0;	en_pt = 0; en_len = 0; data_out_sel = 0; end
 			
 			default: 		begin   s_wren = 1'bx; increment_i = 1'bx; addr_sel = 2'bxx; en_i = 1'bx; en_j = 1'bx; en_pad = 1'bx; en_ct = 1'bx; pt_wren = 1'bx;

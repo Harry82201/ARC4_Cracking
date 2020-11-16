@@ -6,29 +6,27 @@ module task4(input logic CLOCK_50, input logic [3:0] KEY, input logic [9:0] SW,
     // your code here
 
     logic [23:0] key;
-	 logic [7:0] ct_addr, ct_rddata;
-	 logic wren, en_crack, rdy_crack, key_valid;
-	 logic [4:0] char0, char1, char2, char3, char4, char5;
-	 logic done_crack;
-	 logic [7:0] ct_wrdata;
+	logic [7:0] ct_addr, ct_rddata;
+	logic wren, en_crack, rdy_crack, key_valid;
+	logic [4:0] char0, char1, char2, char3, char4, char5;
+	logic done_crack;
+	logic [7:0] ct_wrdata;
 	 
-	 task4_ctrl task4_ctrl_ins(.clk(CLOCK_50), .rst_n(KEY[3]), .rdy_crack, .en_crack, .done_crack);
+	task4_ctrl task4_ctrl_ins(.clk(CLOCK_50), .rst_n(KEY[3]), .rdy_crack, .en_crack, .done_crack);
 	 
-    ct_mem ct(.address(ct_addr), .clock(CLOCK_50), .data(ct_wrdata), 
-				.wren(1'b0), .q(ct_rddata));
+    ct_mem ct(.address(ct_addr), .clock(CLOCK_50), .data(ct_wrdata), .wren(1'b0), .q(ct_rddata));
     
-	 crack c(.clk(CLOCK_50), .rst_n(KEY[3]), .en(en_crack), .rdy(rdy_crack), 
-				.key, .key_valid, .ct_addr, .ct_rddata);
+	crack c(.clk(CLOCK_50), .rst_n(KEY[3]), .en(en_crack), .rdy(rdy_crack), .key, .key_valid, .ct_addr, .ct_rddata);
 
-     hexdisplay HEX5_task4(.char(char5), .HEX(HEX5));
-	 hexdisplay HEX4_task4(.char(char4), .HEX(HEX4));
-	 hexdisplay HEX3_task4(.char(char3), .HEX(HEX3));
-	 hexdisplay HEX2_task4(.char(char2), .HEX(HEX2));
-	 hexdisplay HEX1_task4(.char(char1), .HEX(HEX1));
-	 hexdisplay HEX0_task4(.char(char0), .HEX(HEX0));
+    hexdisplay HEX5_task4(.char(char5), .HEX(HEX5));
+	hexdisplay HEX4_task4(.char(char4), .HEX(HEX4));
+	hexdisplay HEX3_task4(.char(char3), .HEX(HEX3));
+	hexdisplay HEX2_task4(.char(char2), .HEX(HEX2));
+	hexdisplay HEX1_task4(.char(char1), .HEX(HEX1));
+	hexdisplay HEX0_task4(.char(char0), .HEX(HEX0));
 
     
-	 always_ff @(posedge CLOCK_50 or negedge KEY[3]) begin
+	always_ff @(posedge CLOCK_50 or negedge KEY[3]) begin
 		if(KEY[3] == 0) begin
 			char5 <= 5'b11111;
 			char4 <= 5'b11111;
@@ -58,7 +56,7 @@ module task4(input logic CLOCK_50, input logic [3:0] KEY, input logic [9:0] SW,
 			char1 <= char1;
 			char0 <= char0;
 		end
-	 end
+	end
 
 endmodule: task4
 
@@ -82,11 +80,11 @@ module task4_ctrl(input logic clk, input logic rst_n, input logic rdy_crack,
 		case(state)
 			Start: 			next_state = Wait;				
 			Wait: 			if(rdy_crack) next_state = Start_crack;
-								else next_state = Wait;
+							else next_state = Wait;
 			Start_crack: 	next_state = Wait_crack;
 			Wait_crack: 	if(rdy_crack) next_state = Finish;
-								else next_state = Wait_crack;
-			Finish: 			next_state = Finish;
+							else next_state = Wait_crack;
+			Finish: 		next_state = Finish;
 			default: 		next_state = 3'bxxx;
 		endcase
 	end
@@ -97,7 +95,7 @@ module task4_ctrl(input logic clk, input logic rst_n, input logic rdy_crack,
 			Wait: 			begin en_crack = 0; done_crack = 0; end
 			Start_crack: 	begin en_crack = 1; done_crack = 0; end
 			Wait_crack: 	begin en_crack = 0; done_crack = 0; end
-			Finish: 			begin en_crack = 0; done_crack = 1; end
+			Finish: 		begin en_crack = 0; done_crack = 1; end
 			default: 		begin en_crack = 1'bx; done_crack = 1'bx; end
 		endcase
 	end
