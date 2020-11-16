@@ -12,12 +12,16 @@ module doublecrack(input logic clk, input logic rst_n,
 	logic [23:0] low_key_2 = 24'b0000_0000_0000_0001;
 	logic [23:0] high_key_1 = 24'b1111_1111_1111_1110;
 	logic [23:0] high_key_2 = 24'b1111_1111_1111_1111;
+
+	//logic [7:0] ct_addr_1, ct_addr_2;
 	 
 	logic [7:0] pt_addr, pt_wrdata, pt_rddata;
 	logic pt_wren;
     
     // this memory must have the length-prefixed plaintext if key_valid
     pt_mem pt(.address(pt_addr), .clock(clk), .data(pt_wrdata), .wren(pt_wren), .q(pt_rddata));
+
+	doublecrack_ctrl dbcrack_ctrl_ins(.clk, .rst_n, .en, .rdy_crack_1, .rdy_crack_2, .en_crack_1, .en_crack_2, .rdy);
 
     // for this task only, you may ADD ports to crack
     crack c1(.clk, .rst_n, .en(en_crack_1), .rdy(rdy_crack_1), .key(key_1), .key_valid(key_valid_1), 
@@ -35,6 +39,8 @@ module doublecrack(input logic clk, input logic rst_n,
 		if(key_valid_1 | key_valid_2)
 			key_valid <= 1;
 	end
+
+	//ct_addr = key_valid_1 ? ct_addr_1 : (key_valid_2 ? ct_addr_2 : )
 
 endmodule: doublecrack
 

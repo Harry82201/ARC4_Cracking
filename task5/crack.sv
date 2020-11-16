@@ -83,17 +83,17 @@ module crack_ctrl(input logic clk, input logic rst_n, input logic en, input logi
 		case(state)
 			Start:		next_state = Wait;
 			Wait: 		if(en) next_state = Reset_ARC4;
-							else next_state = Wait;
+						else next_state = Wait;
 			Reset_ARC4:	next_state = Wait_Start;
 			Wait_Start:	next_state = Start_ARC4;
 			Start_ARC4: next_state = Wait_ARC4;
 			Wait_ARC4: 	if(rdy_arc4) next_state = Finish;
-							else if(byte_valid == 0) next_state = Inc_skey;
-							else next_state = Wait_ARC4;
+						else if(byte_valid == 0) next_state = Inc_skey;
+						else next_state = Wait_ARC4;
 			Inc_skey: 	if(s_key == max_key) next_state = No_key;
-							else next_state = Reset_ARC4;
-			Finish: 		next_state = Wait;
-			No_key: 		next_state = Wait;
+						else next_state = Reset_ARC4;
+			Finish: 	next_state = Wait;
+			No_key: 	next_state = Wait;
 			default: 	next_state = 4'bxxxx;
 		endcase
 	end
