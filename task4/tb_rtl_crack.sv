@@ -7,11 +7,11 @@ module tb_rtl_crack();
 	logic [23:0] key;
 	logic [7:0] ct_addr, ct_rddata;
 	
-	crack crack_rtl(.clk, .rst_n, .en, .rdy, .key, .key_valid, .ct_addr, .ct_rddata);
-	ct_mem ct_crack_rtl(.address(ct_addr), .clock(clk), .data(8'b0), .wren(1'b0), .q(ct_rddata));
+	crack crack_4_rtl(.clk, .rst_n, .en, .rdy, .key, .key_valid, .ct_addr, .ct_rddata);
+	ct_mem ct_crack_4_rtl(.address(ct_addr), .clock(clk), .data(8'b0), .wren(1'b0), .q(ct_rddata));
 
 	initial begin
-		$readmemh("test2.memh", ct_crack_rtl.altsyncram_component.m_default.altsyncram_inst.mem_data);
+		$readmemh("test2.memh", ct_crack_4_rtl.altsyncram_component.m_default.altsyncram_inst.mem_data);
 	end
 	
 	initial begin
