@@ -8,29 +8,38 @@ module tb_rtl_crack();
 	logic [7:0] ct_addr, ct_rddata;
 	
 	crack crack_rtl(.clk, .rst_n, .en, .rdy, .key, .key_valid, .ct_addr, .ct_rddata);
+	ct_mem ct_crack_rtl(.address(ct_addr), .clock(clk), .data(8'b0), .wren(1'b0), .q(ct_rddata));
+
+	initial begin
+		$readmemh("test2.memh", ct_crack_rtl.altsyncram_component.m_default.altsyncram_inst.mem_data);
+	end
 	
 	initial begin
         clk = 0;
         forever #1 clk = ~clk;
     end
 	 
-	 initial begin
+	initial begin
+		en = 1;
 		rst_n = 1;
 		#10;
 		rst_n = 0;
 		#10;
 		rst_n = 1;
-		#12000;
-		rst_n = 0;
 		#10;
-		rst_n = 1;
-		#1000;
-		rst_n = 0;
-		#10;
-		rst_n = 1;
-	 end
-	 
-	 initial begin
+		en = 0;
+		//#12000;
+		//rst_n = 0;
+		//#10;
+		//rst_n = 1;
+		//#1000;
+		//rst_n = 0;
+		//#10;
+		//rst_n = 1;
+	end
+	
+	/*
+	initial begin
 		en = 1;
 		ct_rddata = 8'b0;
 		#40;
@@ -59,6 +68,7 @@ module tb_rtl_crack();
 		ct_rddata = 8'b1011101;
 		#400;
 		ct_rddata = 8'b10111011;
-	 end
+	end
+	*/
 
 endmodule: tb_rtl_crack

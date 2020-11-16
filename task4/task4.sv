@@ -10,11 +10,11 @@ module task4(input logic CLOCK_50, input logic [3:0] KEY, input logic [9:0] SW,
 	logic wren, en_crack, rdy_crack, key_valid;
 	logic [4:0] char0, char1, char2, char3, char4, char5;
 	logic done_crack;
-	logic [7:0] ct_wrdata;
+	//logic [7:0] ct_wrdata;
 	 
 	task4_ctrl task4_ctrl_ins(.clk(CLOCK_50), .rst_n(KEY[3]), .rdy_crack, .en_crack, .done_crack);
 	 
-    ct_mem ct(.address(ct_addr), .clock(CLOCK_50), .data(ct_wrdata), .wren(1'b0), .q(ct_rddata));
+    ct_mem ct(.address(ct_addr), .clock(CLOCK_50), .data(8'b0), .wren(1'b0), .q(ct_rddata));
     
 	crack c(.clk(CLOCK_50), .rst_n(KEY[3]), .en(en_crack), .rdy(rdy_crack), .key, .key_valid, .ct_addr, .ct_rddata);
 
