@@ -9,7 +9,7 @@ module tb_syn_arc4();
 	logic [7:0] pt_wrdata;
 	logic [23:0] key;
 	
-	arc4 arc4_rtl(.clk, .rst_n, .en, .rdy, .key,.ct_addr, .ct_rddata,
+	arc4 arc4_syn(.clk, .rst_n, .en, .rdy, .key,.ct_addr, .ct_rddata,
 					.pt_addr, .pt_rddata, .pt_wrdata, .pt_wren);
 					  
 	initial begin

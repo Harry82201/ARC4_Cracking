@@ -7,7 +7,7 @@ module tb_syn_ksa();
 	logic [7:0] addr, rddata, wrdata;
 	logic [23:0] key;
 	
-	ksa ksa_rtl(.clk, .rst_n, .en, .rdy, .key, .addr, .rddata, .wrdata, .wren);
+	ksa ksa_syn(.clk, .rst_n, .en, .rdy, .key, .addr, .rddata, .wrdata, .wren);
 	
 	initial begin
         clk = 0;

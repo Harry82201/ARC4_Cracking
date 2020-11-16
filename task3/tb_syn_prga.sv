@@ -9,7 +9,7 @@ module tb_syn_prga();
 	logic [7:0] s_wrdata, pt_wrdata;
 	logic [23:0] key;
 	
-	prga prga_rtl(  .clk, .rst_n, .en, .rdy, .key, .s_addr, .s_rddata, .s_wrdata, .s_wren,
+	prga prga_syn(  .clk, .rst_n, .en, .rdy, .key, .s_addr, .s_rddata, .s_wrdata, .s_wren,
 					.ct_addr, .ct_rddata, .pt_addr, .pt_rddata, .pt_wrdata, .pt_wren);
 	
 	initial begin

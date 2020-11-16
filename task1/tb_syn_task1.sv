@@ -16,7 +16,7 @@ module tb_syn_task1();
 	
 	//de1_gui gui(.SW, .KEY, .LEDR, .HEX5, .HEX4, .HEX3, .HEX2, .HEX1, .HEX0);
 	
-	task1 task1_rtl(.CLOCK_50, .KEY, .SW, .HEX0, .HEX1, .HEX2, .HEX3, .HEX4, .HEX5, .LEDR);
+	task1 task1_syn(.CLOCK_50, .KEY, .SW, .HEX0, .HEX1, .HEX2, .HEX3, .HEX4, .HEX5, .LEDR);
 	
 	initial begin
 		CLOCK_50 = 0;

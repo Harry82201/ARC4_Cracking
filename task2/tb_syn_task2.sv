@@ -14,7 +14,7 @@ module tb_syn_task2();
     logic [6:0] HEX5;
 	logic [9:0] LEDR;
 	
-	task2 task2_rtl(.CLOCK_50, .KEY, .SW, .HEX0, .HEX1, .HEX2, .HEX3, .HEX4, .HEX5, .LEDR);
+	task2 task2_syn(.CLOCK_50, .KEY, .SW, .HEX0, .HEX1, .HEX2, .HEX3, .HEX4, .HEX5, .LEDR);
 	
 	initial begin
         CLOCK_50 = 0;

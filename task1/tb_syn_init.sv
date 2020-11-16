@@ -6,7 +6,7 @@ module tb_syn_init();
     logic clk, rst_n, en, rdy, wren;
 	logic [7:0] addr, wrdata;
 	
-	init init_rtl(.clk, .rst_n, .en, .rdy, .addr, .wrdata, .wren);
+	init init_syn(.clk, .rst_n, .en, .rdy, .addr, .wrdata, .wren);
 
 	initial begin
         clk = 0;

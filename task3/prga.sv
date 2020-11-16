@@ -40,7 +40,7 @@ module prga(input logic clk, input logic rst_n,
 	logic data_out_sel;
 	
 	logic en_i, en_j, en_pad, en_ct, en_pt;
-	logic	en_cal_j, en_sum;
+	logic en_cal_j, en_sum;
 	logic increment_i, increment_k;
 	
 	logic en_len;
