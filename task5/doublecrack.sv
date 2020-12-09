@@ -35,9 +35,10 @@ module doublecrack(input logic clk, input logic rst_n,
 		else if(key_valid_2) key <= key_2;
 	end
 	 
-	always_ff @(posedge clk) begin
-		if(key_valid_1 | key_valid_2)
-			key_valid <= 1;
+	always_ff @(posedge clk or negedge rst_n) begin
+		if (rst_n == 0) key_valid <= 0;
+		else if(key_valid_1 | key_valid_2) key_valid <= 1;
+		else key_valid <= 0;
 	end
 
 	always_ff @(ct_addr_1 or ct_addr_2) begin

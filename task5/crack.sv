@@ -45,8 +45,12 @@ module crack(input logic clk, input logic rst_n,
 			s_key <= s_key;
 	 end
 	
-	always_ff @(posedge clk) begin
-		if(key_found == 2'b01) begin
+	always_ff @(posedge clk or negedge rst_n) begin
+		if(rst_n == 0) begin
+			key <= s_key;
+			key_valid <= 0;
+		end
+		else if(key_found == 2'b01) begin
 			key <= s_key;
 			key_valid <= 1;
 		end else if(key_found == 2'b10) begin
