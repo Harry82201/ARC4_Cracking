@@ -7,7 +7,7 @@ module tb_syn_crack();
 	logic [23:0] key;
 	logic [7:0] ct_addr, ct_rddata;
 	
-	crack crack_syn(.clk, .rst_n, .en, .rdy, .key, .key_valid, .ct_addr, .ct_rddata);
+	crack crack_4_syn(.clk, .rst_n, .en, .rdy, .key, .key_valid, .ct_addr, .ct_rddata);
 	
 	initial begin
         clk = 0;
@@ -29,37 +29,50 @@ module tb_syn_crack();
 		#10;
 		rst_n = 1;
 	end
-	 
+
 	initial begin
 		en = 1;
-		ct_rddata = 8'b0;
+		forever #1100 en = ~en;
+	end
+
+	initial begin
+		ct_rddata = 8'b00000000;
+		forever #100 ct_rddata = ct_rddata + 8'b00000001;
+	end
+	 
+	/*
+	initial begin
+		en = 1;
+		ct_rddata = 8'b00000000;
 		#40;
 		en = 0;
-		ct_rddata = 8'b10010;
+		ct_rddata = 8'b00010010;
 		#100;
-		ct_rddata = 8'b1110;
-		crack_rtl.s_key = 24'b1111_1111_1111_1111_1111_1110; //no key found
+		ct_rddata = 8'b00001110;
+		//crack_rtl.s_key = 24'b1111_1111_1111_1111_1111_1110; //no key found
 		#100;
-		ct_rddata = 8'b110111;
+		ct_rddata = 8'b00110111;
 		#100;
-		ct_rddata = 8'b11111;
+		ct_rddata = 8'b0011111;
 		#200;
-		ct_rddata = 8'b110101;
+		ct_rddata = 8'b00110101;
 		#200;
-		ct_rddata = 8'b110000;
+		ct_rddata = 8'b00110000;
 		#400;
-		ct_rddata = 8'b110001;
+		ct_rddata = 8'b00110001;
 		#11800;
 		en = 1;
 		#10;
 		en = 0;
 		#300;
-		ct_rddata = 8'b111001;
+		ct_rddata = 8'b00111001;
 		#600;
-		ct_rddata = 8'b1011101;
+		ct_rddata = 8'b01011101;
 		#400;
 		ct_rddata = 8'b10111011;
+		#400;
 	end
+	*/
 
 
 endmodule: tb_syn_crack

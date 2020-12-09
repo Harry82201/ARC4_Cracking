@@ -44,7 +44,24 @@ module tb_syn_arc4();
 		rst_n = 1;
 	end
 	
+	initial begin
+		en = 1;
+		forever #1100 en = ~en;
+	end
+
+	initial begin
+		ct_rddata = 8'b0000_0000;
+		pt_rddata = 8'b0000_0000;
+		key = 24'b0000_0000_0000_0000_0000_0000;
+		forever begin
+			#10;
+			ct_rddata = ct_rddata + 8'b0000_0001;
+			pt_rddata = pt_rddata + 8'b0000_0001;
+			key = key + 24'b0000_0000_0000_0000_0000_0001;
+		end
+	end
 	
+	/*
 	initial begin
 		en = 1;
 		ct_rddata = 8'b0;
@@ -69,6 +86,6 @@ module tb_syn_arc4();
 		#10;
 		en = 0;
 	end
-	
+	*/
 
 endmodule: tb_syn_arc4

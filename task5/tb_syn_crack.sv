@@ -8,7 +8,7 @@ module tb_syn_crack();
 	logic [7:0] ct_addr, ct_rddata;
 	logic [23:0] low_key, high_key;
 	
-	crack crack_syn(.clk, .rst_n, .en, .rdy, .key, .key_valid, .ct_addr, .ct_rddata, .low_key, .high_key);
+	crack crack_5_syn(.clk, .rst_n, .en, .rdy, .key, .key_valid, .ct_addr, .ct_rddata, .low_key, .high_key);
 	
 	initial begin
         clk = 0;
@@ -30,7 +30,29 @@ module tb_syn_crack();
 		#10;
 		rst_n = 1;
 	end
-	 
+	
+	initial begin
+		en = 1;
+		forever #1100 en = ~en;
+	end
+
+	initial begin
+		ct_rddata = 8'b00000000;
+		forever #100 ct_rddata = ct_rddata + 8'b00000001;
+	end
+
+	initial begin
+		low_key = 24'b0000_0000_0000_0000_0000_0000;
+		high_key = 24'b0000_0000_0000_0000_0000_1000;
+		forever begin
+			#10;
+			low_key = low_key + 24'b0000_0000_0000_0000_0000_0001;
+			high_key = high_key + 24'b0000_0000_0000_0000_0000_0001;
+		end
+		
+	end
+
+	/*
 	initial begin
 		en = 1;
 		low_key = 24'b1111_1111_1111_1111_0000_0000;
@@ -64,5 +86,6 @@ module tb_syn_crack();
 		#400;
 		ct_rddata = 8'b10111011;
 	end
+	*/
 
 endmodule: tb_syn_crack
