@@ -111,7 +111,7 @@ module ksa(input logic clk, input logic rst_n,
 	end
 
 	always_ff @(posedge clk or negedge rst_n) begin
-		if(rst_n == 0) j_val = 0;
+		if(rst_n == 0) j_val <= 0;
 		else if(en_calc_j) j_val <= temp_si + key_val + j_val;
 		else j_val <= j_val;
 	end
